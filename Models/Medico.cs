@@ -13,11 +13,16 @@ public partial class Medico
 
     public string? Telefono { get; set; }
 
-    public string? Consultorio { get; set; }
 
     public int EspecialidadId { get; set; }
+
+    public int ConsultorioId { get; set; }
+
 
     public virtual ICollection<Citum> Cita { get; set; } = new List<Citum>();
 
     public virtual Especialidad Especialidad { get; set; } = null!;
+
+    public virtual Consultorio Consultorio { get; set; } = null!;
+
 }

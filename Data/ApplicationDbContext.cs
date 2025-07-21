@@ -24,6 +24,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Paciente> Pacientes { get; set; }
 
+    public virtual DbSet<Consultorio> Consultorios { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -54,19 +55,35 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 
+        modelBuilder.Entity<Consultorio>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Consulto__3214EC07C25AB2CB");
+
+            entity.ToTable("Consultorio");
+
+            entity.Property(e => e.Codigo).HasMaxLength(100);
+
+            entity.Property(e => e.Estado).HasColumnType("bit");
+
+        });
+
         modelBuilder.Entity<Medico>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Medico__3214EC071D949507");
 
             entity.ToTable("Medico");
 
-            entity.Property(e => e.Consultorio).HasMaxLength(50);
             entity.Property(e => e.Email).HasMaxLength(150);
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Telefono).HasMaxLength(50);
 
             entity.HasOne(d => d.Especialidad).WithMany(p => p.Medicos)
                 .HasForeignKey(d => d.EspecialidadId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Medico__Especial__3B75D760");
+
+            entity.HasOne(d => d.Consultorio).WithMany(p => p.Medicos)
+                .HasForeignKey(d => d.ConsultorioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Medico__Especial__3B75D760");
         });
