@@ -6,7 +6,6 @@ namespace MediReserva.Models;
 public partial class Consultorio
 {
     public int Id { get; set; }
-
     public string Codigo { get; set; } = null!;
     public bool Estado { get; set; }
 
