@@ -19,6 +19,8 @@ namespace MediReserva
 
             // 2️⃣ Registrar servicios de aplicación
             builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
+            builder.Services.AddScoped<IConsultorioService, ConsultorioService>();
+
 
             // 3️⃣ Configurar DbContext para SQL Server
             builder.Services.AddDbContext<ApplicationDbContext>(options =>

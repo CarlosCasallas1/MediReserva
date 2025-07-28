@@ -85,7 +85,7 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Consultorio).WithMany(p => p.Medicos)
                 .HasForeignKey(d => d.ConsultorioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Medico__Especial__3B75D760");
+                .HasConstraintName("FK_Medico_Consultorio");
         });
 
         modelBuilder.Entity<Paciente>(entity =>
