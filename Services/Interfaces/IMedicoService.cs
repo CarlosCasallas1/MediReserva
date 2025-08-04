@@ -12,12 +12,12 @@ namespace MediReserva.Services.Interfaces
         //<summary>
         //retorna un medico por su id
         //</summary>
-        Task<Medico?> GetByIdAsync();
+        Task<Medico?> GetByIdAsync(int id);
 
         //<summary>
         //crear un nuevo medico
         //</summary>
-        Task<Medico?> CreateAsync(Medico medico);
+        Task<Medico?> CreateIdAsync(Medico medico);
 
         //<summary>
         //actualizar medico existente
