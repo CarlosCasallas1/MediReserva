@@ -3,7 +3,7 @@ using MediReserva.Data;
 using MediReserva.Services.Implementation;
 using MediReserva.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
+using System.Text.Json.Serialization;
 namespace MediReserva
 {
     public class Program
@@ -13,13 +13,19 @@ namespace MediReserva
             var builder = WebApplication.CreateBuilder(args);
 
             // 1️⃣ Registrar servicios de MVC/API
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             // 2️⃣ Registrar servicios de aplicación
             builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
             builder.Services.AddScoped<IConsultorioService, ConsultorioService>();
+            builder.Services.AddScoped<IMedicoService, MedicoService>();
 
 
             // 3️⃣ Configurar DbContext para SQL Server

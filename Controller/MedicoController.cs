@@ -1,0 +1,82 @@
+﻿using MediReserva.Models;
+using MediReserva.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MediReserva.Controllers  
+{
+    [ApiController]
+    [Route("api/[controller]")]   
+
+    public class MedicoController : ControllerBase
+    {
+        private readonly IMedicoService _medicoService;
+
+        public MedicoController(IMedicoService medicoService)
+        {
+            _medicoService = medicoService;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<List<Medico>>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAll()
+        {
+            var medicos = await _medicoService.GetAllAsync();
+            return Ok(new ApiResponse<List<Medico>>(medicos, true, "Los medicos fueron consultadas con exito"));
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var medico = await _medicoService.GetByIdAsync(id);
+
+            if (medico == null)
+                return NotFound(new ApiResponse<Medico>(null, false, "El medico no ha sido encontrado"));
+
+            return Ok(new ApiResponse<Medico>(medico, true, "El medico fue encontrado"));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Create([FromBody] Medico medico)
+        {
+            var medicoCreado = await _medicoService.CreateIdAsync(medico);
+            return CreatedAtAction(nameof(GetById), new { id = medicoCreado?.Id}, new ApiResponse<Medico>(medicoCreado, true, "El medico fue creado"));
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Update(int id, [FromBody] Medico medico)
+        {
+            if (id != medico.Id)
+                return BadRequest(new ApiResponse<Medico>(null, false, "El id no coincide"));
+            var medicoActualizado = await _medicoService.UpdateAsync(medico);
+            if (!medicoActualizado )
+                return NotFound(new ApiResponse<Medico>(null, false, "medico no encontrado"));
+            return Ok(new ApiResponse<Medico>(medico, true, "medico actualizado"));
+
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var medicoEliminado = await _medicoService.DeleteAsync(id);
+
+         if (!medicoEliminado)
+                return NotFound(new ApiResponse<bool>(false, false, "medico no encontrado"));
+            return Ok(new ApiResponse<bool>(true, true, "medico eliminado"));
+
+
+
+        }
+
+
+
+    }
+}
