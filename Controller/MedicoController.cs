@@ -44,7 +44,21 @@ namespace MediReserva.Controllers
         public async Task<IActionResult> Create([FromBody] Medico medico)
         {
             var medicoCreado = await _medicoService.CreateIdAsync(medico);
-            return CreatedAtAction(nameof(GetById), new { id = medicoCreado?.Id}, new ApiResponse<Medico>(medicoCreado, true, "El medico fue creado"));
+
+            if (medicoCreado == null)
+            {
+                return BadRequest(new ApiResponse<Medico>(
+                    null,
+                    false,
+                    "El consultorio no se encuentra disponible"
+                ));
+            }
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = medicoCreado.Id },
+                new ApiResponse<Medico>(medicoCreado, true, "El medico fue creado")
+            );
         }
 
         [HttpPut("{id}")]

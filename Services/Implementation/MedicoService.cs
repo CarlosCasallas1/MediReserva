@@ -28,13 +28,24 @@ namespace MediReserva.Services.Implementation
                 .Include(m => m.Consultorio)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
+        // Service
         public async Task<Medico?> CreateIdAsync(Medico medico)
         {
+            var consultorio = medico.ConsultorioId != null
+                ? await _context.Consultorios.FindAsync(medico.ConsultorioId)
+                : null;
+
+            if (consultorio == null || !consultorio.Estado)
+                return null;
+
+            consultorio.Estado = false;
             _context.Medicos.Add(medico);
             await _context.SaveChangesAsync();
-            return medico;
 
+            return medico;
         }
+
+
         public async Task<bool> UpdateAsync(Medico medico)
         {
             if (!_context.Medicos.Any(m => m.Id == medico.Id))
