@@ -54,6 +54,7 @@ namespace MediReserva.Controllers
                 ));
             }
 
+
             return CreatedAtAction(
                 nameof(GetById),
                 new { id = medicoCreado.Id },
