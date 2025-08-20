@@ -45,16 +45,39 @@ namespace MediReserva.Services.Implementation
             return medico;
         }
 
-
+        //Modificación del método PUT (UpdateMedico) 
+        // Actualiza un médico y gestiona la liberación/asignación de consultorios
         public async Task<bool> UpdateAsync(Medico medico)
         {
-            if (!_context.Medicos.Any(m => m.Id == medico.Id))
-                return false;
+            var medicoExistente = await _context.Medicos
+                .Include(m => m.Consultorio)
+                .FirstOrDefaultAsync(m => m.Id == medico.Id);
+            if (medicoExistente == null) return false;
 
-            _context.Medicos.Update(medico);
+            var consultorioAnterior = medicoExistente.Consultorio;
+
+            if (medico.ConsultorioId != medicoExistente.ConsultorioId)
+            {
+                if (consultorioAnterior != null) consultorioAnterior.Estado = true;
+
+                if (medico.ConsultorioId != null)
+                {
+                    var nuevoConsultorio = await _context.Consultorios.FindAsync(medico.ConsultorioId);
+                    if (nuevoConsultorio == null || !nuevoConsultorio.Estado) return false;
+                    nuevoConsultorio.Estado = false;
+                }
+
+                medicoExistente.ConsultorioId = medico.ConsultorioId;
+            }
+
+            medicoExistente.Nombre = medico.Nombre;
+            medicoExistente.EspecialidadId = medico.EspecialidadId;
+            // Agregar aquí otros campos a actualizar
+
             await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var medico = await _context.Medicos.FindAsync(id);

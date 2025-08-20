@@ -62,6 +62,7 @@ namespace MediReserva.Controllers
             );
         }
 
+        // Actualiza un médico y valida id y disponibilidad del consultorio
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
         [ProducesResponseType(500)]
@@ -69,12 +70,13 @@ namespace MediReserva.Controllers
         {
             if (id != medico.Id)
                 return BadRequest(new ApiResponse<Medico>(null, false, "El id no coincide"));
-            var medicoActualizado = await _medicoService.UpdateAsync(medico);
-            if (!medicoActualizado )
-                return NotFound(new ApiResponse<Medico>(null, false, "medico no encontrado"));
-            return Ok(new ApiResponse<Medico>(medico, true, "medico actualizado"));
+            var actualizado = await _medicoService.UpdateAsync(medico);
 
+            if (!actualizado)
+                return BadRequest(new ApiResponse<Medico>(null, false, "No se pudo actualizar: médico no encontrado o consultorio ocupado"));
+            return Ok(new ApiResponse<Medico>(medico, true, "Médico actualizado con éxito"));
         }
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
