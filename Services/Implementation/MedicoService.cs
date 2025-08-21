@@ -78,16 +78,22 @@ namespace MediReserva.Services.Implementation
             return true;
         }
 
+        // Se modificó el método DELETE para liberar el consultorio asignado al eliminar un médico
         public async Task<bool> DeleteAsync(int id)
         {
-            var medico = await _context.Medicos.FindAsync(id);
-            if (medico == null)
-                return false;
+            var medico = await _context.Medicos
+                .Include(m => m.Consultorio)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
+            if (medico == null) return false;
+            // Si tenía consultorio, liberarlo
+            if (medico.Consultorio != null)
+                medico.Consultorio.Estado = true;
             _context.Medicos.Remove(medico);
             await _context.SaveChangesAsync();
             return true;
         }
+
     }
 }
 
