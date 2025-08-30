@@ -1,0 +1,96 @@
+﻿@page "/medicos"
+@using MediReserva.Models
+@* @using MediReserva.Services.Interfaces *@
+@* @inject IMedicoService MedicoService *@
+
+<h3>Médicos</h3>
+
+@if (medicos == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <button class="btn btn-primary mb-2" @onclick="Nuevo">Nuevo Médico</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in medicos)
+            {
+                <tr>
+                    <td>@m.Id</td>
+                    <td>@m.Nombre</td>
+                    <td>@m.Email</td>
+                    <td>@m.Telefono</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" @onclick="() => Editar(m.Id)">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => Eliminar(m.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Medico>? medicos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 🔹 Datos quemados en memoria
+        medicos = new List<Medico>
+        {
+            new Medico { Id = 1, Nombre = "Carlos Pérez", Email = "carlos@mail.com", Telefono = "1111111", EspecialidadId = 1 },
+            new Medico { Id = 2, Nombre = "Ana Gómez", Email = "ana@mail.com", Telefono = "2222222", EspecialidadId = 2 },
+            new Medico { Id = 3, Nombre = "Juan López", Email = "juan@mail.com", Telefono = "3333333", EspecialidadId = 1 }
+        };
+
+        await Task.CompletedTask; // solo para cumplir con async
+    }
+
+    private async Task Nuevo()
+    {
+        var newId = medicos!.Any() ? medicos!.Max(m => m.Id) + 1 : 1;
+
+        var medico = new Medico
+            {
+                Id = newId,
+                Nombre = "Nuevo Médico",
+                Email = $"nuevo{newId}@mail.com",
+                Telefono = "1234567",
+                EspecialidadId = 1
+            };
+
+        medicos!.Add(medico);
+        await Task.CompletedTask;
+    }
+
+    private async Task Editar(int id)
+    {
+        var medico = medicos!.FirstOrDefault(m => m.Id == id);
+        if (medico != null)
+        {
+            medico.Nombre += " (Editado)";
+        }
+        await Task.CompletedTask;
+    }
+
+    private async Task Eliminar(int id)
+    {
+        var medico = medicos!.FirstOrDefault(m => m.Id == id);
+        if (medico != null)
+        {
+            medicos!.Remove(medico);
+        }
+        await Task.CompletedTask;
+    }
+}
