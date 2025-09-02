@@ -78,20 +78,19 @@ namespace MediReserva.Controllers
         }
 
 
-        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(ApiResponse<Medico>), 200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> Delete(int id)
+        [HttpPut("inactivar/{id}")]
+        public async Task<IActionResult> Inactivar(int id)
         {
-            var medicoEliminado = await _medicoService.DeleteAsync(id);
+            var resultado = await _medicoService.InactivarAsync(id);
 
-         if (!medicoEliminado)
-                return NotFound(new ApiResponse<bool>(false, false, "medico no encontrado"));
-            return Ok(new ApiResponse<bool>(true, true, "medico eliminado"));
+            if (!resultado.Exitoso)
+                return BadRequest(new { mensaje = resultado.Mensaje });
 
-
-
+            return Ok(new { mensaje = resultado.Mensaje });
         }
+
 
 
 

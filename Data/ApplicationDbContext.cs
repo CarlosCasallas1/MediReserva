@@ -94,10 +94,11 @@ public partial class ApplicationDbContext : DbContext
 
             entity.ToTable("Paciente");
 
-            entity.Property(e => e.Apellido).HasMaxLength(100);
-            entity.Property(e => e.Documento).HasMaxLength(50);
+            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Apellido).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Documento).IsRequired().HasMaxLength(50);
+            entity.HasIndex(e => e.Documento).IsUnique();
             entity.Property(e => e.Email).HasMaxLength(150);
-            entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Telefono).HasMaxLength(50);
         });
 

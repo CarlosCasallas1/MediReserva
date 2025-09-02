@@ -30,6 +30,8 @@ public partial class Medico
 
     public int? ConsultorioId { get; set; }
 
+    [Required]
+    public bool Estado { get; set; } = true;
 
     public virtual ICollection<Citum> Cita { get; set; } = new List<Citum>();
 

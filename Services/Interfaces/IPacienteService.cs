@@ -2,27 +2,27 @@
 
 namespace MediReserva.Services.Interfaces
 {
-    public interface IMedicoService
+    public interface IPacienteService
     {
         //<summary>
-        //retorna todos los medicos incluyendo sus relaciones 
+        // retorna todos los pacientes incluyendo sus relaciones 
         //</summary>
-        Task<List<Medico>> GetAllAsync();
+        Task<List<Paciente>> GetAllAsync();
 
         //<summary>
-        //retorna un medico por su id
+        // retorna un paciente por su id
         //</summary>
-        Task<Medico?> GetByIdAsync(int id);
+        Task<Paciente?> GetByIdAsync(int id);
 
         //<summary>
-        //crear un nuevo medico
+        // crear un nuevo paciente
         //</summary>
-        Task<Medico?> CreateIdAsync(Medico medico);
+        Task<Paciente?> CreateIdAsync(Paciente paciente);
 
         //<summary>
-        //actualizar medico existente
+        // actualizar paciente existente
         //</summary>
-        Task<bool> UpdateAsync(Medico medico);
+        Task<bool> UpdateAsync(Paciente paciente);
 
         //<summary>
         // inactivar paciente por su id (soft delete)
@@ -31,4 +31,3 @@ namespace MediReserva.Services.Interfaces
 
     }
 }
-

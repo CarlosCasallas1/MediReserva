@@ -26,7 +26,7 @@ namespace MediReserva
             builder.Services.AddScoped<IEspecialidadService, EspecialidadService>();
             builder.Services.AddScoped<IConsultorioService, ConsultorioService>();
             builder.Services.AddScoped<IMedicoService, MedicoService>();
-
+            builder.Services.AddScoped<IPacienteService, PacienteService>();
 
             // 3️⃣ Configurar DbContext para SQL Server
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
